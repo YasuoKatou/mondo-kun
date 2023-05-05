@@ -6,8 +6,8 @@ class Trainer:
 
     def outFile(self, file_name):
         p = Path(__file__).parent.parent
-        p = p / 'mondo-data' / file_name
-        return p    
+        p = p / 'data' / file_name
+        return p
 
     def append_yml(self, file_name, qa_list, categories):
         p = self.outFile(file_name)

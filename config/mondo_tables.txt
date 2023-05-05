@@ -1,0 +1,7 @@
+PostgeSQLサーバにテーブル及びインデックスを作成する
+
+【コマンド】
+カレントディレクトリ：プロジェクトルート
+$ psql -h localhost -U "mondo-kun" -f ./config/mondo_tables.sql mondo
+
+[EOF]
