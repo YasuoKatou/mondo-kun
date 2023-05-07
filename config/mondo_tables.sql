@@ -21,7 +21,9 @@ create table q_and_a (
     question text not null,     -- 質問（トレーニングデータ全文）
     answer text not null,       -- 回答（トレーニングデータ全文）
     list_up_key text not null,  -- 第一段の検索キー
-    morphological text not null -- 質問の形態素解析の結果
+    morphological text not null,-- 質問の形態素解析の結果
+    remarks text,               -- 備考
+    rec_date_time timestamp not null    -- 登録日時
 );
 create index q_and_a_idx_01 on q_and_a (
     list_up_key
