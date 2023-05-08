@@ -1,5 +1,7 @@
 import pathlib
 from trainer import Trainer
+import requests
+from bs4 import BeautifulSoup
 
 class Geography(Trainer):
 
@@ -60,6 +62,54 @@ class Geography(Trainer):
         self.append_yml(self._OUT_FILE, l, categories)
         print('{}地方を追加'.format(len(l)))
 
+    _SOURCE_HTML = './_geography_source.html'
+    def make_source_html(self, url):
+        html = requests.get(url)
+        soup = BeautifulSoup(html.content, "html.parser")
+        p = pathlib.Path(self._SOURCE_HTML)
+        p.write_text(str(soup))
+
+    def make_geography_02(self, categories=[]):
+        p = pathlib.Path(self._SOURCE_HTML)
+        s = p.read_text()
+        soup = BeautifulSoup(s, "html.parser")
+        l = []
+        tn = 0
+        for t in soup.find_all('table'):
+            tn += 1
+            if tn == 1:     # 地域のインデックス
+                continue
+            #print(t)
+            for e in t.contents:
+                if e.name != 'tr':
+                    continue
+                cl = 0
+                n1 = ''
+                n2 = ''
+                th = False
+                for td in e.contents:
+                    if td.name != 'td':
+                        continue
+                    cl += 1
+                    if cl == 1 and td.text == '国名':
+                        th = True
+                        break
+                    if cl == 1:
+                        n1 = td.text.strip()
+                    elif cl == 2:
+                        n2 = td.text.strip()
+                if th:
+                    continue
+                #wk = n1.split(' ')
+                #if len(wk) > 1:
+                #    n1 = wk[-1]
+                #print('\t{} : {}'.format(n1, n2))
+                l.append([
+                    '{}の首都は？'.format(n1),
+                    '{}です。'.format(n2)])
+        self.append_yml(self._OUT_FILE, l, categories)
+        print('{}国と首都を追加'.format(len(l)))
+
 if __name__ == '__main__':
     # 地理データを作成
     geography = Geography()
@@ -67,4 +117,8 @@ if __name__ == '__main__':
     geography.add_jp_pref(['地理'])
     # ７分割地方の都道府県
     geography.add_jp_7group()
+    # 世界の首都を追加
+    #_DATA_URL02 = 'https://sekaichizu.net/book/world.html'
+    #geography.make_source_html(_DATA_URL02)
+    geography.make_geography_02()
 #[EOF]
