@@ -5,8 +5,7 @@ class Morphological:
     def __init__(self):
         self._wakati = MeCab.Tagger("-Owakati")
 
-
-    _CHAR_TYPE_NOUN = [2, 8]     # 名詞
+    _CHAR_TYPE_NOUN = [2, 7, 8]     # 名詞
     def decideDbSearchKey(self, question):
         node = self._wakati.parseToNode(question)
         word = None
@@ -43,4 +42,5 @@ class Morphological:
             qn += 1
             qc += 1 if qw in dbw else 0
         return 0 if qn == 0 else qc / qn
+
 #[EOF]
